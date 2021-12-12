@@ -14,7 +14,7 @@ router.put('/:username', async (req, res) => {
         pool.query(selectQuery, [req.params.username.toUpperCase()], (err, result, fields) => {
             if (err) {
                 console.log(err);
-                res.json({ status: "FAILIURE", error: "NO PLAN FOUND WITH NAME : " + req.body.plan_id });
+                res.json({ status: "FAILIURE", error: "ERROR WHILE FETCHING USER DETAILS : " + req.params.username.toUpperCase() });
                 return;
             }
             if (result[0]) {
@@ -37,3 +37,24 @@ router.put('/:username', async (req, res) => {
 
 });
 
+//GET USER
+router.get('/:username', async (req, res) => {
+    if (!req.params.username.trim()) {
+        res.json({ status: "FAILIURE", error: "USER NAME CAN NOT BE EMPTY" });
+    } else {
+        const selectQuery = 'SELECT * FROM USER WHERE USER_NAME = ?';
+        pool.query(selectQuery, [req.params.username.toUpperCase()], (err, result, fields) => {
+            if (err) {
+                console.log(err);
+                res.json({ status: "FAILIURE", error: "ERROR WHILE FETCHING USER DETAILS : " + req.params.username });
+                return;
+            }
+            if (!result[0]) {
+                res.json({ status: "FAILIURE", error: "USER NOT FOUND " + req.params.username });
+            } else {
+                res.json({ user_name: result[0].USER_NAME, created_at: result[0].CREATED_AT });
+            }
+        });
+    }
+
+});
