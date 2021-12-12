@@ -5,8 +5,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//CREATE ROUTES 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var userRouter = require('./routes/user');
+var subscriptionRouter = require('./routes/subscription');
+
 
 var app = express();
 
@@ -20,8 +23,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//USE ROUTERS
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
+app.use('/subscription', subscriptionRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -39,35 +44,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-//mysql db connection pool details
-const pool = createPool(
-  {
-    host: "database-1.cwo8qpqj2avt.us-east-2.rds.amazonaws.com",
-    user: "wishup",
-    password: "1stAssignment@wishup",
-    database: "WISHUP",
-    connectionLimit: 10
-  }
-);
-
-//routers
-//user router
-const userRouter = require('./routes/user');
-app.use('/user', userRouter);
-
-//subscription router
-const subscriptionRouter = require('./routes/subscription');
-app.use('/subscription', subscriptionRouter);
-
-
-//START SERVER
-const port = 8088;
-app.listen(port, () => console.log(`WISHUP SUBCRIPTION SERVICE IS ACTIVE AND RUNNING AT PORT ${port}`));
-
-//TEST API
-app.get('/hello', (req, res) => { console.log("hello"); res.json("hello") });
-
-
 module.exports = app;
-module.exports = pool;
-

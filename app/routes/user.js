@@ -1,11 +1,12 @@
 const express = require('express');
+const pool = require('../bin/db')
 const router = express.Router();
 
 module.exports = router;
 
 //REST APIs
 //SAVE USER
-router.put('/:username', async(req, res) => {
+router.put('/:username', async (req, res) => {
     const query = 'INSERT INTO USER SET USER_NAME = ? , CREATED_AT = ?';
     var date_time = new Date();
     pool.query(query, [req.params.username, date_time], (err, result, fields) => {
